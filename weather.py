@@ -1,17 +1,56 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-import sys
-import os
-
-
 import logging
 import epd2in13bc
+import requests, json
 import time
 from PIL import Image,ImageDraw,ImageFont
 import traceback
 
 logging.basicConfig(level=logging.DEBUG)
 
+#Prepare display
+epd = epd2in13bc.EPD()
+logging.info("Init and clear")
+epd.init()
+epd.Clear()
+
+font20 = ImageFont.truetype('Font.ttc', 20)
+font18 = ImageFont.truetype('Font.ttc', 18)
+drawblack = ImageDraw.Draw(HBlackimage)
+
+def load_api_key():
+    with open("config.json") as config_json:
+        config_data = json.load(config_json)
+        return config_data["api_key"]
+
+def draw_temp():
+    
+def fetch_weather(api_key, zip_code="10016"):
+  
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+  
+    # Give city name     
+    req_url = base_url + "appid=" + api_key + "&zip=" + zip_code 
+    
+    # get method of requests module 
+    # return response object 
+    response = requests.get(req_url) 
+    
+    # json method of response object  
+    # convert json format data into 
+    # python format data 
+    raw_data = response.json()
+    print(raw_data)
+    temp_K = raw_data["main"]["temp"]
+    temp_F = (temp_K - 273.15) * 9/5 + 32
+    print(temp_F)
+    drawblack.text((10, 0), f"Temperature: {temp_F}", font = font20, fill = 0)
+
+api_key = load_api_key()
+fetch_weather(api_key)
+
+"""
 try:
     logging.info("epd2in13bc Demo")
 
@@ -79,3 +118,4 @@ except KeyboardInterrupt:
     logging.info("ctrl + c:")
     epd2in13bc.epdconfig.module_exit()
     exit()
+"""

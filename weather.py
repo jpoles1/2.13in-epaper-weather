@@ -15,8 +15,8 @@ logging.info("Init and clear")
 epd.init()
 epd.Clear()
 
-font20 = ImageFont.truetype('Font.ttc', 20)
-font18 = ImageFont.truetype('Font.ttc', 18)
+font12 = ImageFont.truetype('Font.ttc', 12)
+font16 = ImageFont.truetype('Font.ttc', 16)
 HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
 HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image
 drawblack = ImageDraw.Draw(HBlackimage)
@@ -29,8 +29,8 @@ def load_api_key():
 
 def draw_weather(locale, temp):
     current_time = time.strftime("%H:%M", time.localtime())
-    drawblack.text((10, 0), f"Weather for {locale} updated @ {current_time}", font = font18, fill = 0)
-    drawblack.text((34, 0), f"Temperature: {temp}", font = font18, fill = 0)
+    drawblack.text((10, 0), f"Weather for {locale} updated @ {current_time}", font = font12, fill = 0)
+    drawblack.text((10, 16), f"Temp: {temp}", font = font16, fill = 0)
     epd.display(epd.getbuffer(HBlackimage), epd.getbuffer(HRYimage))
 
 def fetch_weather(api_key, zip_code="10016"):

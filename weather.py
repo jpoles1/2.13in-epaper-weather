@@ -5,7 +5,7 @@ import os
 
 
 import logging
-from waveshare_epd import epd2in13bc
+import epd2in13bc
 import time
 from PIL import Image,ImageDraw,ImageFont
 import traceback

@@ -17,15 +17,19 @@ epd.Clear()
 
 font20 = ImageFont.truetype('Font.ttc', 20)
 font18 = ImageFont.truetype('Font.ttc', 18)
+HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
+HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image
 drawblack = ImageDraw.Draw(HBlackimage)
+drawry = ImageDraw.Draw(HRYimage)
 
 def load_api_key():
     with open("config.json") as config_json:
         config_data = json.load(config_json)
         return config_data["api_key"]
 
-def draw_temp():
-    
+def draw_weather(temp):
+    drawblack.text((10, 0), f"Temperature: {temp_F}", font = font20, fill = 0)
+
 def fetch_weather(api_key, zip_code="10016"):
   
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
@@ -44,8 +48,7 @@ def fetch_weather(api_key, zip_code="10016"):
     print(raw_data)
     temp_K = raw_data["main"]["temp"]
     temp_F = (temp_K - 273.15) * 9/5 + 32
-    print(temp_F)
-    drawblack.text((10, 0), f"Temperature: {temp_F}", font = font20, fill = 0)
+    draw_weather(temp_F)
 
 api_key = load_api_key()
 fetch_weather(api_key)

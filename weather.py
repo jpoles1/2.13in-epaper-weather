@@ -27,8 +27,11 @@ def load_api_key():
         config_data = json.load(config_json)
         return config_data["api_key"]
 
-def draw_weather(temp):
-    drawblack.text((10, 0), f"Temperature: {temp_F}", font = font20, fill = 0)
+def draw_weather(locale, temp):
+    current_time = time.strftime("%H:%M", time.localtime())
+    drawblack.text((10, 0), f"Weather for {locale} updated @ {current_time}", font = font18, fill = 0)
+    drawblack.text((34, 0), f"Temperature: {temp}", font = font18, fill = 0)
+    epd.display(epd.getbuffer(HBlackimage), epd.getbuffer(HRYimage))
 
 def fetch_weather(api_key, zip_code="10016"):
   
@@ -48,7 +51,8 @@ def fetch_weather(api_key, zip_code="10016"):
     print(raw_data)
     temp_K = raw_data["main"]["temp"]
     temp_F = (temp_K - 273.15) * 9/5 + 32
-    draw_weather(temp_F)
+    rounded_temp = round(temp_F, 1)
+    draw_weather(zip_code, rounded_temp)
 
 api_key = load_api_key()
 fetch_weather(api_key)

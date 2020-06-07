@@ -1,0 +1,12 @@
+[Unit]
+Description=E-Paper Weather Service
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/pi/2.13in-epaper-weather/weather.py
+StandardInput=tty-force
+
+[Install]
+WantedBy=multi-user.target

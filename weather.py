@@ -21,10 +21,6 @@ epd.Clear()
 
 font12 = ImageFont.truetype('Font.ttc', 12)
 font16 = ImageFont.truetype('Font.ttc', 16)
-HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
-HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image
-drawblack = ImageDraw.Draw(HBlackimage)
-drawry = ImageDraw.Draw(HRYimage)
 
 def load_api_key():
     with open("config.json") as config_json:
@@ -32,7 +28,10 @@ def load_api_key():
         return config_data["api_key"]
 
 def draw_weather(locale, temp, next_rain):
-    epd.Clear()
+    HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
+    HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image
+    drawblack = ImageDraw.Draw(HBlackimage)
+    drawry = ImageDraw.Draw(HRYimage)
 
     margin_left = 4
     margin_top = 20

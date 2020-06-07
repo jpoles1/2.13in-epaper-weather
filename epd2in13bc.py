@@ -66,8 +66,12 @@ class EPD:
         
     def ReadBusy(self):
         logging.debug("e-Paper busy")
-        while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
+        self.send_command(0x71);
+        iter = 0;
+        while(epdconfig.digital_read(self.busy_pin) == 0 or iter > 100): 
+            self.send_command(0x71);
             epdconfig.delay_ms(100)
+            iter+=1
         logging.debug("e-Paper busy release")
 
     def init(self):
@@ -75,25 +79,22 @@ class EPD:
             return -1
             
         self.reset()
+        self.send_command(0x04);  
+        self.ReadBusy();#waiting for the electronic paper IC to release the idle signal
 
-        self.send_command(0x06) # BOOSTER_SOFT_START
-        self.send_data(0x17)
-        self.send_data(0x17)
-        self.send_data(0x17)
+        self.send_command(0x00);    #panel setting
+        self.send_data(0x0f);   #LUT from OTP,128x296
+        self.send_data(0x89);    #Temperature sensor, boost and other related timing settings
+
+        self.send_command(0x61);    #resolution setting
+        self.send_data (0x68);  
+        self.send_data (0x00);  
+        self.send_data (0xD4);
+
+        self.send_command(0X50);    #VCOM AND DATA INTERVAL SETTING
+        self.send_data(0x77);   #WBmode:VBDF 17|D7 VBDW 97 VBDB 57
+                            # WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
         
-        self.send_command(0x04) # POWER_ON
-        self.ReadBusy()
-        
-        self.send_command(0x00) # PANEL_SETTING
-        self.send_data(0x8F)
-        
-        self.send_command(0x50) # VCOM_AND_DATA_INTERVAL_SETTING
-        self.send_data(0xF0)
-        
-        self.send_command(0x61) # RESOLUTION_SETTING
-        self.send_data(self.width & 0xff)
-        self.send_data(self.height >> 8)
-        self.send_data(self.height & 0xff)
         return 0
 
     def getbuffer(self, image):
@@ -124,32 +125,32 @@ class EPD:
         self.send_command(0x10)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(imageblack[i])
-        self.send_command(0x92)
         
         self.send_command(0x13)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(imagered[i])
-        self.send_command(0x92)
         
         self.send_command(0x12) # REFRESH
+        epdconfig.delay_ms(100)
         self.ReadBusy()
         
     def Clear(self):
         self.send_command(0x10)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(0xFF)
-        self.send_command(0x92) 
         
         self.send_command(0x13)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(0xFF)
-        self.send_command(0x92)
         
         self.send_command(0x12) # REFRESH
+        epdconfig.delay_ms(100)
         self.ReadBusy()
 
     def sleep(self):
-        self.send_command(0x02) # POWER_OFF
+        self.send_command(0X50) 
+        self.send_data(0xf7)
+        self.send_command(0X02) 
         self.ReadBusy()
         self.send_command(0x07) # DEEP_SLEEP
         self.send_data(0xA5) # check code

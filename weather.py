@@ -7,8 +7,11 @@ import time
 from PIL import Image,ImageDraw,ImageFont
 from datetime import datetime
 import traceback
+import threading
 
 logging.basicConfig(level=logging.DEBUG)
+
+REFRESH_INTERVAL = 1 # in minutes
 
 #Prepare display
 epd = epd2in13bc.EPD()
@@ -38,11 +41,11 @@ def draw_weather(locale, temp, next_rain):
     if next_rain:
         drawry.text((margin_left, margin_top + 36), f"Rain @ {next_rain.hour}:00 on {next_rain.month}/{next_rain.day}", font = font16, fill = 0)
     else:
-        drawblack.text((4, margin_top + 36), f"No rain predicted in next 48 hrs", font = font16, fill = 0)
+        drawblack.text((4, margin_top + 36), f"No rain predicted for 48 hrs", font = font16, fill = 0)
     epd.display(epd.getbuffer(HBlackimage), epd.getbuffer(HRYimage))
 
-def fetch_weather(api_key, zip_code="10016"):
-  
+def fetch_weather(zip_code="10016"):
+    threading.Timer(60.0 * REFRESH_INTERVAL, fetch_weather).start()
     base_url = "http://api.openweathermap.org/data/2.5/onecall"
     req_url = f"{base_url}?appid={api_key}&exclude=minutely&lat=40.746&lon=-73.978&units=imperial"
     response = requests.get(req_url) 
@@ -55,4 +58,4 @@ def fetch_weather(api_key, zip_code="10016"):
     draw_weather(zip_code, rounded_temp, next_rain)
 
 api_key = load_api_key()
-fetch_weather(api_key)
+fetch_weather()

@@ -1,5 +1,7 @@
 This repo contains a python script which will pull in the weather from the OpenWeatherMap API and display it on a [2.13 in Waveshare e-paper HAT](https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT) for the RasPi Zero/Zero W!
 
+![E-paper Weather Station Demo](https://raw.githubusercontent.com/jpoles1/2.13in-epaper-weather/master/demo.jpg)
+
 All you need to get started is an OpenWeatherMap API key and the appropriate hardware! Use the following steps to get set up:
 
 1) Follow the [instructions on the Waveshare wiki](https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT) (under Hardware/Software setup) to prepare the required pre-requisites for the e-paper display.

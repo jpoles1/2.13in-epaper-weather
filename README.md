@@ -16,7 +16,7 @@ All you need to get started is an OpenWeatherMap API key and the appropriate har
 }
 ```
 
-4) Add the following to the end of your crontab using `crontab -e` replacing the working directory following `cd` with whever you've cloned this repo. You can change the update frequency from the 15 minutes set below to whatever interval you desire:
+4) Add the following to the end of your crontab using `crontab -e` replacing the working directory following `cd` with wherever you've cloned this repo. You can change the update frequency from the 15 minutes set in the command below to whatever interval you desire:
 ```
 */15 * * * * cd /home/pi/2.13in-epaper-weather/ && /usr/bin/python3 weather.py > /tmp/epaper-weather.log 2>&1
 ```

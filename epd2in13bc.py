@@ -68,7 +68,7 @@ class EPD:
         logging.debug("e-Paper busy")
         self.send_command(0x71);
         iter = 0;
-        while(epdconfig.digital_read(self.busy_pin) == 0 or iter > 100): 
+        while(epdconfig.digital_read(self.busy_pin) == 0 and iter < 100): 
             self.send_command(0x71);
             epdconfig.delay_ms(100)
             iter+=1

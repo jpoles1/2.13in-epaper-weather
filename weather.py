@@ -32,6 +32,8 @@ def load_api_key():
         return config_data["api_key"]
 
 def draw_weather(locale, temp, next_rain):
+    epd.Clear()
+
     margin_left = 4
     margin_top = 20
     datetime_str = time.strftime("%H:%M on %m/%d", time.localtime())

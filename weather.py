@@ -46,7 +46,7 @@ def draw_weather(locale, temp, next_rain):
     epd.display(epd.getbuffer(HBlackimage), epd.getbuffer(HRYimage))
 
 def fetch_weather(zip_code="10016"):
-    threading.Timer(60.0 * REFRESH_INTERVAL, fetch_weather).start()
+    #threading.Timer(60.0 * REFRESH_INTERVAL, fetch_weather).start()
     base_url = "http://api.openweathermap.org/data/2.5/onecall"
     req_url = f"{base_url}?appid={api_key}&exclude=minutely&lat=40.746&lon=-73.978&units=imperial"
     response = requests.get(req_url) 
@@ -60,3 +60,5 @@ def fetch_weather(zip_code="10016"):
 
 api_key = load_api_key()
 fetch_weather()
+epd2in13bc.epdconfig.module_exit()
+exit()
